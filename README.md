@@ -22,7 +22,7 @@ composer require starkpay-php/starkpay
 require __DIR__.'/vendor/autoload.php';
 
 // Creating a new payment object ($merchant_id, $shop_id)
-$payment = new \Starkpayment\Payment(233, 1);
+$payment = new \Starkpayment\Payment('<merchant id>', '<shop id>');
 
 // Retrieving payment url ($orderid, $amount)
 $redirect_url =  $payment->getUrl(15333, 23.5);

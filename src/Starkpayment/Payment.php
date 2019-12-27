@@ -54,8 +54,8 @@ class Payment
      */
     function __construct($merchant_id, $shop_id)
     {
-        $this->merchant_id = $merchant_id;
-        $this->shop_id = $shop_id;
+        $this->merchant_id = urlencode($merchant_id);
+        $this->shop_id = urlencode($shop_id);
     }
 
     /**
