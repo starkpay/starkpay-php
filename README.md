@@ -29,5 +29,11 @@ $redirect_url =  $payment->getUrl(15333, 23.5);
 ?>
 ```
 
+### PHP Unit
+PHP unit test
+``` bash
+./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/ --coverage-html reports --whitelist src
+```
+
 ## License
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
