@@ -22,10 +22,22 @@ composer require starkpay-php/starkpay
 require __DIR__.'/vendor/autoload.php';
 
 // Creating a new payment object ($merchant_id, $shop_id)
-$payment = new \Starkpayment\Payment('<merchant id>', '<shop id>');
+$payment = new \Starkpayments\Payment('<merchant id>', '<shop id>');
 
 // Retrieving payment url ($orderid, $amount)
 $redirect_url =  $payment->getUrl(15333, 23.5);
+?>
+```
+
+### Payment Validation On CallBack Page
+
+```php
+<?php
+if ($payment->paymentIsValid()) {
+	echo "Payment Successful";
+} else {
+	echo "Payment Failed, Error : ". $payment->getErrorMessage();
+}
 ?>
 ```
 

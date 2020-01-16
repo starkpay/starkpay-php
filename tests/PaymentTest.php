@@ -13,7 +13,7 @@
 
 /**
  * Payment_Test Class
- * @package Starkpayment
+ * @package Starkpayments
  */
 
 use PHPUnit\Framework\TestCase;
