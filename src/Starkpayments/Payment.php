@@ -25,7 +25,7 @@ class Payment
     /**
      * @var string api endpoint
      */
-    public $endpoint = 'https://process.starkpayments.net/gateway/checkout';
+    public $endpoint = 'https://pay.starkpayments.net/api/payment';
 
     /**
      * @var string encryption method
@@ -33,19 +33,9 @@ class Payment
     private $encryptionMethod = 'AES-256-CBC';
 
     /**
-     * @var string encryption method
+     * @var string API Key
      */
-    private $secret = 'Mystarkpayment_@#%09keypasswordf';    
-
-    /**
-     * @var string Merchant ID
-     */
-    private $merchant_id;
-
-    /**
-     * @var string Shop ID
-     */
-    private $shop_id;
+    private $api_key;
 
     /**
      * @var string Error Message
@@ -54,24 +44,24 @@ class Payment
 
     /**
      * __construct
-     * @param [string] $merchant_id Merchant ID
-     * @param [string] $shop_id Shop ID
+     * @param [string] $api_key API Key
      */
-    function __construct($merchant_id, $shop_id)
+    function __construct($key)
     {
-        $this->merchant_id = urlencode($merchant_id);
-        $this->shop_id = urlencode($shop_id);
+        $this->api_key = trim($key);
     }
 
-    /**
-     * encrypt
-     * @param [string] $data
-     * @return [string] $encrypted data
-     */
-    private function encrypt($data)
+
+    private function request($data)
     {
-        $iv = substr($this->secret, 0, 16);
-        return urlencode(openssl_encrypt($data, $this->encryptionMethod, $this->secret,0,$iv));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->endpoint);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-Api-Key: '. $this->api_key));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        return json_decode($response, true);
     }
 
     /**
@@ -79,21 +69,21 @@ class Payment
      *
      * To get payment URL
      *
-     * @param [string] $merchant_id Merchant ID
-     * @param [string] $shop_id Shop ID
-     * @param [string] $shop_id Shop ID
+     * @param [float] $amount Amount
+     * @param [string] $currency Currency
+     * @param [string] $description Descripton
+     * @param [string] $redirectUrl Redirect URL
      * 
      */
-    public function getURL($order_id , $amount, $currency = 'GBP') : string
+    public function payment($amount, $currency, $description, $redirectUrl)
     {
-        return join('/',[
-            $this->endpoint,
-            $this->merchant_id,
-            $this->shop_id,
-            $this->encrypt($order_id),
-            $this->encrypt($amount),
-            $currency
+        $response = $this->request([
+            'amount' => $amount,
+            'currency' => $currency,
+            'description' => $description,
+            'redirectUrl' => $redirectUrl
         ]);
+        return new Pay($response);
     }
 
     /**

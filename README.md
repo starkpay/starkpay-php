@@ -21,11 +21,20 @@ composer require starkpay-php/starkpay
 // including autoload file.
 require __DIR__.'/vendor/autoload.php';
 
-// Creating a new payment object ($merchant_id, $shop_id)
-$payment = new \Starkpayments\Payment('<merchant id>', '<shop id>');
+// Creating a new payment object ($apiKey) visit http://dashboard.starkpayments.net to get API Key
+$payment = new \Starkpayments\Payment('<api_key>');
 
-// Retrieving payment url ($orderid, $amount)
-$redirect_url =  $payment->getUrl(15333, 23.5);
+// Get pay object ($amount, $currency (EUR,USD etc), $description, $returnUrl)
+$pay =  $payment->getUrl(23.5, 'USD', 'Invoice 2223', 'https://mydomain.com/payment_return.php');
+
+if ($pay->isSuccess()) {
+	//redirect URL
+	 $redirect_url = $pay->getRedirectUrl();
+	 header("location: $redirect_url");
+} else {
+	echo $pay->getErrorMessage();
+}
+
 ?>
 ```
 

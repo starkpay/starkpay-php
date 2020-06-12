@@ -22,9 +22,7 @@ class Payment_Test extends TestCase
 {
     public function testPayment()
     {
-        $payment = new \Starkpayment\Payment('123', '456');
+        $payment = new \Starkpayment\Payment('key');
         $this->assertInstanceOf('Starkpayment\Payment', $payment);
-        $this->assertInternalType('string', $payment->getUrl('12',23.4));
-        $this->assertRegexp('/starkpayments.net/', $payment->getUrl('12',23.4));
     }
 }
